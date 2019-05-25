@@ -12,10 +12,6 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        List<Fish> fishies = hook.GetComponent<Hook>().getHooked();
-        foreach (Fish f in fishies) {
-            f.gameObject.transform.position = anchor.transform.position;
-        }
     }
 
 
