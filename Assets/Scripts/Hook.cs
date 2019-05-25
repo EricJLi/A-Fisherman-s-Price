@@ -9,12 +9,14 @@ public class Hook : MonoBehaviour {
     private Vector2 startPos;
     private bool isDragging;
     private Vector2 touchDelta;
+    private List<Fish> fishies;
 
     private Vector3 min;
     private Vector3 max;
 
     void Start() {
         lineRenderer = GetComponent<LineRenderer>();
+        fishies = new List<Fish>();
         min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0));
         max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0));
     }
@@ -50,8 +52,13 @@ public class Hook : MonoBehaviour {
         }
 
         Move();
-        lineRenderer.SetPosition(0, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 1)));
-        lineRenderer.SetPosition(1, transform.position);
+        drawFishingLine();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Fish") {
+            fishies.Add(collision.gameObject.GetComponent<Fish>());
+        }
     }
 
     private void Move() {
@@ -60,5 +67,14 @@ public class Hook : MonoBehaviour {
         var newXPos = Mathf.Clamp(transform.position.x + deltaX, min.x, max.x);
         var newYPos = Mathf.Clamp(transform.position.y + deltaY, min.y, max.y);
         transform.position = new Vector3(newXPos, newYPos);
+    }
+
+    private void drawFishingLine() {
+        lineRenderer.SetPosition(0, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 1)));
+        lineRenderer.SetPosition(1, transform.position);
+    }
+
+    public List<Fish> getHooked() {
+        return fishies;
     }
 }
